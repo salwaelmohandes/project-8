@@ -1,0 +1,30 @@
+extends ../layout 
+
+block content
+    //- h1= title
+    //- p Welcome to #{title}
+    div.subheader 
+        a(type="button" href='/views/index' class="btn-new") Books
+        a(type="button" href="/new" class="btn-new") Create New Book &#43; 
+        a(type="button" href='/:id/update' class="btn-new") Update Book
+        a(type="button" href='/new' class="btn-new") Delete Book
+
+    p
+    label(for='title') Title:
+    input#title(type="text", name="title") 
+    p
+    label(for='author') Author:
+    input#author(type="text", name="author")
+    p
+    label(for='genre') Genre:
+    input#genre(type="text", name="genre") 
+    p
+    label(for='year') Year:
+    input#year(type="text", name="year") 
+
+    each book in books ? books : []
+        book
+            h3= book.title
+            include by_line
+            p= book.shortDescription()
+            a(href = "books/" + book.id) Read More &rarr;
