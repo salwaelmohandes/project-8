@@ -1,5 +1,6 @@
-'use strict';
-const Sequelize = require('sequelize');
+'strict mode';
+
+const Sequelize = require("sequelize");
 const moment = require('moment');
 
 module.exports = (sequelize) => {
@@ -14,9 +15,14 @@ module.exports = (sequelize) => {
         }
     }
     Book.init({
-    // id:Sequelize.INTEGER,
+    id: {
+        type: Sequelize.DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+        },
     title: {
-        type: Sequelize.STRING,
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: '"Title" is required'
@@ -24,15 +30,16 @@ module.exports = (sequelize) => {
         }
     },
     author: {
-        type: Sequelize.STRING,
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: {
             msg: '"Author" is required'
             }
         }
     },
-    genre: Sequelize.STRING,
-    year: Sequelize.INTEGER,
+    genre: Sequelize.DataTypes.STRING,
+    year: Sequelize.DataTypes.INTEGER,
 
     }, { sequelize });
 

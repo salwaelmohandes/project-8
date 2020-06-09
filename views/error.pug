@@ -1,8 +1,10 @@
 extends layout
 
-block content
-  body
-    h1= error.message
+block content 
+    h1 Books
+    h2= error.message
     h2= error.status
     pre #{error.stack}
+    //- p Author is required
+    //- p Name is required
     a.button(href='/') Home

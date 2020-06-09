@@ -49,7 +49,7 @@ input[type=submit] {
 
 p {
   margin: 20px auto;
-  text-align:center;
+  /* text-align:center; */
 }
 
 ul {
@@ -82,11 +82,11 @@ td {
   padding: 5px 20px 5px 10px;
 }
 
-/* table, th, td {
+table, th, td {
   text-align:center;
   border: 1px solid rgb(69, 63, 63);
   margin: 0 auto;
-} */
+}
 
 
 label {
