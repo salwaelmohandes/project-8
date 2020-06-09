@@ -2,12 +2,10 @@ extends ../layout
 
 block content
     body
-    h1 Update Book
-
+    //- h1 Update Book
     include errors
 
     form(action="/books/" + book.id + "/edit", method="post")
-        //- include form
         p
             label(for='title') Title
             input(name='title' type='text' id='title' value=book.title)

@@ -17,20 +17,16 @@ function asyncHandler(cb){
 
 // let createError = require("http-errors");
 
-//  GET books listing.
-// router.get('/', asyncHandler(async (req, res, next) =>{
-//   res.redirect("/books");
-// }));
-
 //  Shows the full list of books.
 router.get('/', asyncHandler(async (req, res) => {
   const books = await Book.findAll({ order: [["year", "DESC"]]});
-  res.render('/books/', { books, title: "Books"}); 
+  res.render('books', { books, title: "Books"}); 
 }));
 
 // Shows the create new book form.
 router.get('/new', asyncHandler(async(req, res) => {
-  res.render('new', { book: {}, title: "New Book"}) 
+  res.render('books/new', { book: {}, title: "New Book"})
+  console.log('books/new') 
 }));
 
 // Posts a new book to the database.
@@ -43,7 +39,7 @@ router.post('/new', asyncHandler(async (req, res) => {
   } catch (error) {
     if(error.name === "SequelizeValidationError") {
      book = await Book.build(req.body);
-     res.render("new", { book,errors: error.errors, title: "New Book" }) 
+     res.render("books/new", { book, errors: error.errors, title: "New Book" }) 
     } else {
       throw error;
     }
@@ -54,7 +50,7 @@ router.post('/new', asyncHandler(async (req, res) => {
 router.get("/:id/edit",asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
-    res.render("edit", { book, title: "Edit Book"});
+    res.render("books/edit", {book, title: "Edit Book"});
   } else {
     res.sendStatus(404);
   }
@@ -64,7 +60,7 @@ router.get("/:id/edit",asyncHandler(async (req, res) => {
 router.get("/:id", asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
-    res.render("book_detail", { book, title: book.title}) 
+    res.render("books/book_detail", { book, title: book.title}) 
   } else {
     res.sendStatus(404);
   }
@@ -75,7 +71,7 @@ router.post("/:id/edit", asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
     await book.update(req.body);
-    res.redirect("edit" + book.id); 
+    res.redirect("/books/edit/" + book.id); 
   } else {
     res.sendStatus(404);
   }
@@ -84,8 +80,8 @@ router.post("/:id/edit", asyncHandler(async (req, res) => {
 /* Deletes book form. */ 
 router.get('/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  if(article) {
-    res.render("delete", { book: {}, title: "Delete Book"}) 
+  if(book) {
+    res.render("books/delete", { book: {}, title: "Delete Book"}) 
   } else {
     res.sendStatus(404);
   }
@@ -96,7 +92,7 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
     await book.destroy();
-    res.redirect("index");
+    res.redirect("/books");
   } else {
     res.sendStatus(404);
   } 
