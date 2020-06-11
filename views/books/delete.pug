@@ -2,6 +2,9 @@ extends ../layout
 
 block content
     p Are you sure you want to delete this book?
-    h2 #{book.title}
-        a(href='/') ← No! Take me back
-        a(href="books/new", class="btn-new")  ← Yes, I'm sure &#43; 
+    h2=book.title
+    form(method='post' action='/books/' + book.id + '/delete')
+        a.button(href='edit') ← No! Take me back
+        input(type='submit' value='Delete' class="delete")  
+        //- a.button(href='/') ← Yes, I'm sure &#43; 
+
