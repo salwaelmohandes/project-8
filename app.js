@@ -24,15 +24,11 @@ app.use('/books', booksRouter);
 
 // catch error and forward to error handler
 app.use(function(req, res, next) {
-  const err = new Error('Oh noes!')
-  err.status = 500;
-  // next(createError(404));
-  next(err);
+  // const err = new Error('Oh noes!')
+  // err.status = 500;
+  next(createError(404));
+  // next(err);
 });
-
-// app.use((req,res,next) => {
-//   next();
-// })
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -41,11 +37,13 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   if (err.status=== 404) {
-    res.render('books/page-not-found');
+    res.render('error');
   }else {
   // render the error page
-    res.status(err.status || 500 );
-    res.render('error');
+    // res.status(err.status || 500 );
+    // const err = new Error('Oh noes!')
+    res.status(err.status);
+    res.render('books/page-not-found');
   }
 });
 
