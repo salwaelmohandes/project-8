@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/books', booksRouter);
 
-// catch 404 and forward to error handler
+// catch error and forward to error handler
 app.use(function(req, res, next) {
   const err = new Error('Oh noes!')
   err.status = 500;

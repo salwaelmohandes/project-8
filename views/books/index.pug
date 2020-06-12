@@ -1,11 +1,12 @@
 extends ../layout 
-
-block content
-    body        
+    
+block content 
+    h1 Books 
+    body          
     form(action="/books/search" method="post")
         p
             input(type="input" class="search" name="query" placeholder="search")
-            input(type="submit" class="search_btn" name="search")
+            input(type="submit" class="search_btn" name="search" value="Search")
     p
         a(class='button' href="/books/new") Create New Book  
     
@@ -17,14 +18,20 @@ block content
                 th Genre
                 th Year
         tbody 
-            each book in books ? books : []
+            each book in books 
                 tr
                     td
                         a(href="/books/" + book.id)= book.title
                     td= book.author
                     td= book.genre 
                     td= book.year
-    
+    p
+        - if(pages)
+            p Pages        
+                - for(let i=1; i < pages ; i++)
+                    a(href=`/books/page/${i}`)=`${i}`
+                    
+                            
     //- h3 Title: #{book.title}
     //- include by_line
     //- p book.shortDescription()

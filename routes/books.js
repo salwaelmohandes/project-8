@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const { Op } = require('../models').Sequelize;
 
+const booksPerPage = 5;
 
 /* Handler function to wrap each route.*/
 function asyncHandler(cb){
@@ -15,12 +17,47 @@ function asyncHandler(cb){
   }
 }
 
+router.get('/page/:page', asyncHandler(async(req, res) => {
+  const books = await Book.findAll({order: [["title", "ASC"]] });
+  let pages = books.length/booksPerPage
+  const first = (parseInt(req.params.page) * booksPerPage) - booksPerPage
+  const end = first + 6;
+    if(first + 1>books.length){
+      res.render('books/page-not-found')
+    }else {
+  const pageBooks = books.slice(first+1, end);
+  res.render('books', {books: pageBooks, pages})
+  }
+}))
 
-//  Shows the full list of books.
+//  Shows the list of books.
 router.get('/', asyncHandler(async (req, res) => {
-  const books = await Book.findAll({ order: [["year", "DESC"]]});
-  res.render('books', { books, title: "Books"}); 
+  // const books = await Book.findAll({ order: [["year", "DESC"]]});
+  res.redirect('/books/page/1'); 
 }));
+
+
+router.get('/search', asyncHandler(async(req, res) => {
+  res.render('books/search', {books, query: req.body.search});
+}));
+
+
+router.post('/search', asyncHandler( async(req,res) => {
+  search = true;
+  const books = await Book.findAndCountAll({
+    where: {
+      [Op.or]: 
+        {title: {[Op.like]: `%${req.body.query}%`},
+        author: {[Op.like]: `%${req.body.query}%`},
+        genre: {[Op.like]: `%${req.body.query}%`},
+        year: {[Op.like]: `%${req.body.query}%`}
+      }
+    },
+  });
+  res.render('books/search', {books, query: req.body.search});
+}));
+
+
 
 // Shows the create new book form.
 router.get('/new', asyncHandler(async(req, res) => {
