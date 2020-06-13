@@ -11,12 +11,12 @@ function asyncHandler(cb){
     try {
       await cb(req, res, next)
     } catch(error){
-      // res.status(500).send(error);
       next(error)
     }
   }
 }
 
+// Pagination
 router.get('/page/:page', asyncHandler(async(req, res) => {
   const books = await Book.findAll({order: [["title", "ASC"]] });
   let pages = books.length/booksPerPage
@@ -30,13 +30,12 @@ router.get('/page/:page', asyncHandler(async(req, res) => {
   }
 }))
 
-//  Shows the list of books.
+//  Shows the home page.
 router.get('/', asyncHandler(async (req, res) => {
-  // const books = await Book.findAll({ order: [["year", "DESC"]]});
   res.redirect('/books/page/1'); 
 }));
 
-
+// Search
 router.get('/search', asyncHandler(async(req, res) => {
   res.render('books/search', {books, query: req.body.search});
 }));
@@ -56,7 +55,6 @@ router.post('/search', asyncHandler( async(req,res) => {
   });
   res.render('books/search', {books, query: req.body.search});
 }));
-
 
 
 // Shows the create new book form.
@@ -86,7 +84,6 @@ router.get("/:id/update",asyncHandler(async (req, res) => {
   if(book) {
     res.render("books/update", {book, title: "Update Book"});
   } else {
-    // res.sendStatus(404);
     throw error;
     }
 }));
@@ -97,7 +94,6 @@ router.get("/:id", asyncHandler(async (req, res) => {
   if(book) {
     res.render("books/book_detail", { book, title: book.title}) 
   } else {    
-    // res.sendStatus(404);
     throw error;
   }
 }));
@@ -111,7 +107,6 @@ router.post("/:id/update", asyncHandler(async (req, res) => {
     await book.update(req.body);
     res.redirect("/books/" + book.id); 
   } else {
-    // res.sendStatus(404);
     throw error;
   }
 } catch (error) {
@@ -130,7 +125,6 @@ router.get('/:id/delete', asyncHandler(async (req, res) => {
   if(book) {
     res.render("books/delete", { book: {}, title: "Delete Book"}) 
   } else {
-    // res.sendStatus(404);
     throw error;
   }
 }));
@@ -142,7 +136,6 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
     await book.destroy();
     res.redirect("/books");
   } else {
-    // res.sendStatus(404);
     throw error;  
   } 
 }));

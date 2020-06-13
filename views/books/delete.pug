@@ -5,6 +5,5 @@ block content
     h2=book.title
     form(method='post' action='/books/' + book.id + '/delete')
         a.button(href='update') ← No! Take me back
-        input(type='submit' value='Delete' class="delete")  
-        //- a.button(href='/') ← Yes, I'm sure &#43; 
+        a.button(href='/' type='submit' value='Delete' class="delete") ← Yes, I'm sure &#43; 
 
