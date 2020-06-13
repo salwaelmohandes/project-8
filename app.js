@@ -24,10 +24,7 @@ app.use('/books', booksRouter);
 
 // catch error and forward to error handler
 app.use(function(req, res, next) {
-  // const err = new Error('Oh noes!')
-  // err.status = 500;
   next(createError(404));
-  // next(err);
 });
 
 // error handler
@@ -39,10 +36,8 @@ app.use(function(err, req, res, next) {
   if (err.status=== 404) {
     res.render('error');
   }else {
-  // // render the error page
+  // render the error page
     res.status(err.status || 500 );
-    // const err = new Error('Oh noes!')
-    // res.status(err.status);
     res.render('books/page-not-found');
   }
 });
