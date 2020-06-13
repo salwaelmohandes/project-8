@@ -39,10 +39,10 @@ app.use(function(err, req, res, next) {
   if (err.status=== 404) {
     res.render('error');
   }else {
-  // render the error page
-    // res.status(err.status || 500 );
+  // // render the error page
+    res.status(err.status || 500 );
     // const err = new Error('Oh noes!')
-    res.status(err.status);
+    // res.status(err.status);
     res.render('books/page-not-found');
   }
 });
