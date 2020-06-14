@@ -3,7 +3,7 @@ extends ../layout
 block content 
     h1 Books 
     body          
-    form(action="/books/search" method="post")
+    form(action="/books/page/1" method="post")
         p
             input(type="input" class="search" name="query" placeholder="search")
             input(type="submit" class="search_btn" name="search" value="Search")
@@ -28,7 +28,7 @@ block content
     p
         - if(pages)
             p Pages        
-                - for(let i=1; i < pages ; i++)
+                - for(let i=1; i <= pages ; i++)
                     a(href=`/books/page/${i}`)=`${i}`
                     
                             

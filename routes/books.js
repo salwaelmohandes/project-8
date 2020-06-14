@@ -18,31 +18,21 @@ function asyncHandler(cb){
 
 // Pagination
 router.get('/page/:page', asyncHandler(async(req, res) => {
-  const books = await Book.findAll({order: [["title", "ASC"]] });
-  let pages = books.length/booksPerPage
+  const books = await Book.findAll({order: [["title", "ASC"]]
+  });
+  let pages = Math.ceil(books.length/booksPerPage);
   const first = (parseInt(req.params.page) * booksPerPage) - booksPerPage
-  const end = first + 6;
-    if(first + 1>books.length){
-      res.render('books/page-not-found')
-    }else {
-  const pageBooks = books.slice(first+1, end);
-  res.render('books', {books: pageBooks, pages})
+  const end = first + 5;
+  if(first + 1>books.length){
+    res.render('books/page-not-found')
+  } else {
+    const pageBooks = books.slice(first, end);
+    res.render('books', {books: pageBooks, pages})
   }
-}))
-
-//  Shows the home page.
-router.get('/', asyncHandler(async (req, res) => {
-  res.redirect('/books/page/1'); 
 }));
 
-// Search
-router.get('/search', asyncHandler(async(req, res) => {
-  res.render('books/search', {books, query: req.body.search});
-}));
-
-
-router.post('/search', asyncHandler( async(req,res) => {
-  search = true;
+// Search and pagination for search results
+router.post('/page/:page', asyncHandler(async(req, res) => {
   const books = await Book.findAll({
     where: {
       [Op.or]: 
@@ -53,9 +43,21 @@ router.post('/search', asyncHandler( async(req,res) => {
       }
     },
   });
-  res.render('books/search', {books, query: req.body.search});
+  let pages = Math.ceil(books.length/booksPerPage);
+  const first = (parseInt(req.params.page) * booksPerPage) - booksPerPage
+  const end = first + 5;
+  if(first + 1>books.length){
+    res.render('books/page-not-found')
+  } else {
+    const pageBooks = books.slice(first, end);
+    res.render('books', {books: pageBooks, pages})
+  }
 }));
 
+//  Shows the home page.
+router.get('/', asyncHandler(async (req, res) => {
+  res.redirect('/books/page/1'); 
+}));
 
 // Shows the create new book form.
 router.get('/new', asyncHandler(async(req, res) => {
@@ -63,7 +65,7 @@ router.get('/new', asyncHandler(async(req, res) => {
 }));
 
 // Posts a new book to the database.
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/new', asyncHandler(async (req, res) => {
   let book;
   try {
     book = await Book.create(req.body);
@@ -99,7 +101,7 @@ router.get("/:id", asyncHandler(async (req, res) => {
 }));
 
 // Updates book info in the database.
-router.post("/:id/update", asyncHandler(async (req, res) => {
+router.post("/:id", asyncHandler(async (req, res) => {
   let book;
   try {
   const book = await Book.findByPk(req.params.id);
@@ -123,7 +125,7 @@ router.post("/:id/update", asyncHandler(async (req, res) => {
 router.get('/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if(book) {
-    res.render("books/delete", { book: {}, title: "Delete Book"}) 
+    res.render("books/delete", { book, title: "Delete Book"}) 
   } else {
     throw error;
   }
